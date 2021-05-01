@@ -14,16 +14,16 @@
         <thead>
             <tr>
                 <th>id</th>
-                <th>name</th>
-                <th>country</th>
+                <th>Nombre</th>
+                <th>Pais</th>
             </tr>
         
         </thead>
         <tfoot>
             <tr>
                 <th>id</th>
-                <th>name</th>
-                <th>country</th>
+                <th>Nombre</th>
+                <th>Pais</th>
             </tr>
         </tfoot>
     </table> 
@@ -38,33 +38,33 @@
 $(document).ready(function() {
 
     $('#datos thead tr').clone(true).appendTo( '#datos thead' );
+    let column = 0; 
     $('#datos thead tr:eq(1) th').each(function (i) {
         
         var title = $(this).text();
 
         var columns = <?= json_encode($columns) ?>
 
-        let counter = 0;
         let select = `<select>`;
-        for (const iterator of columns) {
-            select += `<option value=${iterator[counter]}>${iterator[counter]}</option>`
+        select += `<option disabled selected="selected">Filtro: ${title}</option>`
+        for (const item of columns[column]) {
+            console.log(item)
+            select += `<option value=${item}>${item}</option>`
         }
         select += `</select>`;
-
-        console.log(select);
-
         
-        // $(this).html(select);
-
-        // $( 'select', this ).on( 'change', function () {
-        //     if ( table.column(i).search() !== this.value ) {
-        //         table
-        //             .column(i)
-        //             .search( this.value )
-        //             .draw();
-        //     }
-        // });
-
+        $(this).html(select);
+        
+        $( 'select', this ).on( 'change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                    table
+                        .column(i)
+                        .search( this.value )
+                        .draw();
+            }
+        });
+                
+        column++
     });
 
     var table = $('#datos').DataTable({

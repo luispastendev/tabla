@@ -43,8 +43,6 @@ class Tabla extends BaseController
 			$data[$k] = array_values($v);
 		}
 
-		
-
 		return $this->respond([
 			"sEcho" => $page,
 			"iTotalRecords" => $total,

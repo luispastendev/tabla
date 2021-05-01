@@ -13,7 +13,7 @@ class TableLibrary{
     public function getDataAllColumns() : array{
         $columns = [];
         foreach ($this->configs->fields as $k => $value) {
-            $columns[$k] = $this->model->getValuesColumn($value);
+            $columns[$k] = array_column($this->model->getValuesColumn($value),$value);
         }
         return $columns;
         
