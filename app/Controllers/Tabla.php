@@ -41,8 +41,23 @@ class Tabla extends BaseController
 			'search'        => $search['value']
 		]);
 
-	
 		return $this->respond($payload);
-
 	}
+
+	public function excelGenerate(){
+
+		$query = $this->request->getPost();
+
+		$payload = $this->TableLibrary->getTable([
+			'page'          => $query['draw'],
+			'len'           => $query['length'],
+			'start'			=> $query['start'],
+			'column_search' => $query['columns'],
+			'sort'          => $query['order'],
+			'search'        => $query['search']['value']
+		], false);
+
+		return $this->respond($payload);
+	}
+
 }

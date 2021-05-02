@@ -7,7 +7,7 @@ use Faker\Generator;
 
 class Tabla extends Model
 {
-	protected $table                = 'programacion';
+	protected $table                = 'tbl_programacion';
 	protected $primaryKey           = 'id';
 	protected $useAutoIncrement     = true;
 	protected $returnType           = 'array';

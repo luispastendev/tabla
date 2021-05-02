@@ -36,7 +36,7 @@ class TableLibrary{
      * @param array $filters
      * @return array
      */
-    public function getTable(array $filters) : array{
+    public function getTable(array $filters, $paginate = true) : array{
 
         [
             'page' => $page, 
@@ -47,14 +47,24 @@ class TableLibrary{
             'search' => $search,
         ] = $filters;
 
+
         // Aplicando filtros de distintos controles (columna, busqueda general, ordenamiento)
         $this->makeSearch($search);
         $this->applyFiltersColumn($cSearch);
         $this->sortColumn($sort);
         
         
-        $data  = $this->model->paginate($len, 'gp1', ($start / $len) + 1); // registros de la pagina
-		$total = $this->model->pager->getTotal('gp1'); // total de registros
+        if(!$paginate){
+            // Búsqueda normal para exportacion a excel
+            $data = $this->model->findAll();
+            // $total = $this->model->countAllResults();
+            return $data;
+
+        }else{
+
+            $data = $this->model->paginate($len, 'gp1', ($start / $len) + 1); // registros de la pagina    
+            $total = $this->model->pager->getTotal('gp1'); // total de registros
+        }
 
         return [
 			"sEcho" => $page,
@@ -118,12 +128,6 @@ class TableLibrary{
 
         if($match){
             foreach ($this->configs->fields as $k => $field) {
-                // if($k === 0){ // first match
-                //         $this->model->like($field, $match, 'both', null, true);
-                //         continue;
-                // }
-                // $this->model->orlike($field, $match, 'both', null, true);
-                // $this->model->orLike($field, $match);
                 $this->model->orLike($field, $match, 'both', null, true);
             }
         }

@@ -35,6 +35,7 @@ $routes->setAutoRoute(false);
 $routes->get('/', 'Tabla::index');
 $routes->get('/getData', 'Tabla::getData');
 $routes->get('/getDataColumns', 'Tabla::getDataColumns');
+$routes->post('/excelGenerate', 'Tabla::excelGenerate');
 
 /*
  * --------------------------------------------------------------------
