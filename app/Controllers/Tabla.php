@@ -25,30 +25,24 @@ class Tabla extends BaseController
 
 	public function getData(){
 
-		// echo '<pre>';
-		// var_dump($this->request->getVar('columns'));
-		// echo '</pre>';
-		// exit();
-		
-		$page  = $this->request->getVar('draw');
-		$len   = $this->request->getVar('length');
-		$start = $this->request->getVar('start');
+		$page    = $this->request->getVar('draw');
+		$len     = $this->request->getVar('length');
+		$start   = $this->request->getVar('start');
+		$columns = $this->request->getVar('columns');
+		$order   = $this->request->getVar('order');
+		$search  = $this->request->getVar('search');
 
-
-		$model = model('Tabla');
-		$data = $model->paginate(10, 'gp1', ($start / $len) + 1 );
-		$total = $model->pager->getTotal('gp1');
-
-		foreach($data as $k => $v){
-			$data[$k] = array_values($v);
-		}
-
-		return $this->respond([
-			"sEcho" => $page,
-			"iTotalRecords" => $total,
-			"iTotalDisplayRecords" => $total,
-			"aaData" => $data
+		$payload = $this->TableLibrary->getTable([
+			'page'          => $page,
+			'len'           => $len,
+			'start'         => $start,
+			'column_search' => $columns,
+			'sort'          => $order,
+			'search'        => $search['value']
 		]);
+
+	
+		return $this->respond($payload);
 
 	}
 }

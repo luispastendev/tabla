@@ -36,7 +36,15 @@ class Tabla extends Model
 	// QUERIES
 
 	public function getValuesColumn($column){
-		return $this->distinct()->select($column)->findAll();
+		return $this->distinct()->select($column)->orderBy($column,'asc')->findAll();
+	}
+
+
+	public function withMultiSearch(string $match){
+		
+		return $this->like('id', $match, 'both', null, true)
+					->orLike('title', $match, 'both', null, true)
+					->orLike('status', $match, 'both', null, true);
 	}
 
 }

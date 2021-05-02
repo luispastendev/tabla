@@ -46,16 +46,16 @@ $(document).ready(function() {
         var columns = <?= json_encode($columns) ?>
 
         let select = `<select>`;
-        select += `<option disabled selected="selected">Filtro: ${title}</option>`
+        select += `<option value='' selected="selected">Filtro: ${title}</option>`
         for (const item of columns[column]) {
-            console.log(item)
-            select += `<option value=${item}>${item}</option>`
+            select += `<option value="${item}">${item}</option>`
         }
         select += `</select>`;
-        
+
         $(this).html(select);
         
         $( 'select', this ).on( 'change', function () {
+            console.log(this.value);
             if ( table.column(i).search() !== this.value ) {
                     table
                         .column(i)
