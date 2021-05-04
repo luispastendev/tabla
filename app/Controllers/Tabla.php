@@ -17,12 +17,44 @@ class Tabla extends BaseController
 		$this->TableLibrary = new TableLibrary;
 	}
 
+	/**
+	 * Endpoint para renderizar la vista principal he inyectar filtros de las 
+	 * columnas a js 
+	 *
+	 * @return View // ver view/tabla.php
+	 */
 	public function index()
 	{
-			
 		return view('tabla', ['columns' => $this->TableLibrary->getDataAllColumns()]);
 	}
 
+	/**
+	 * Endpoint para realizar el reRender de filtros de tabla cada que 
+	 * se apliquen nuevos filtros
+	 *
+	 * @return HTTP application/json
+	 */	
+	public function reRenderColumns(){
+
+		$query = $this->request->getPost();
+
+		$payload = $this->TableLibrary->getColumnsByMatches([
+			'page'          => $query['draw'],
+			'len'           => $query['length'],
+			'start'			=> $query['start'],
+			'column_search' => $query['columns'],
+			'sort'          => $query['order'],
+			'search'        => $query['search']['value']
+		], false);
+
+		return $this->respond($payload);
+	}
+
+	/**
+	 * Método para generar los valores de la tabla paginados
+	 *
+	 * @return HTTP application/json
+	 */
 	public function getData(){
 
 		$page    = $this->request->getVar('draw');
@@ -40,10 +72,16 @@ class Tabla extends BaseController
 			'sort'          => $order,
 			'search'        => $search['value']
 		]);
-
+		
 		return $this->respond($payload);
 	}
 
+	/**
+	 * Genera los datos necesarios segun el estado actual de la tabla
+	 * para usarlos en la exportacion de excel
+	 *
+	 * @return HTTP application/json
+	 */
 	public function excelGenerate(){
 
 		$query = $this->request->getPost();

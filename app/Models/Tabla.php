@@ -23,9 +23,6 @@ class Tabla extends Model
 
 	public function fake(Generator &$faker)
     {
-
-		// $faker->addProvider(new \Faker\Provider\en_US\Address($faker));
-		// $faker->addProvider(new \Faker\Provider\en_US\Address($faker));
         return [
             'name' => $faker->firstName . " " . $faker->lastName,
             'country' => $faker->Country,
@@ -38,7 +35,6 @@ class Tabla extends Model
 	public function getValuesColumn($column){
 		return $this->distinct()->select($column)->orderBy($column,'asc')->findAll();
 	}
-
 
 	public function withMultiSearch(string $match){
 		

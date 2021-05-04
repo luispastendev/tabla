@@ -26,7 +26,25 @@ class TableLibrary{
             $columns[$k] = array_column($this->model->getValuesColumn($value),$value);
         }
         return $columns;
+    }
+
+    /**
+     * Regresa los posibles filtros de la tabla segun los
+     * filtros aplicados a la columna
+     *
+     * @param array $filters
+     * @return array
+     */
+    public function getColumnsByMatches(array $filters) : array{
         
+        // Reutiliza getTable para obtener los datos de la tabla con los filtros aplicados
+        $data = $this->getTable($filters, false);
+        
+        $columns = [];
+        foreach ($this->configs->fields as $k => $v) {
+            $columns[$k] = array_unique(array_column($data, $v));
+        }
+        return $columns;
     }
 
     /**
@@ -47,7 +65,6 @@ class TableLibrary{
             'search' => $search,
         ] = $filters;
 
-
         // Aplicando filtros de distintos controles (columna, busqueda general, ordenamiento)
         $this->makeSearch($search);
         $this->applyFiltersColumn($cSearch);
@@ -56,15 +73,12 @@ class TableLibrary{
         
         if(!$paginate){
             // Búsqueda normal para exportacion a excel
-            $data = $this->model->findAll();
-            // $total = $this->model->countAllResults();
-            return $data;
+            return $this->model->findAll();
 
-        }else{
-
-            $data = $this->model->paginate($len, 'gp1', ($start / $len) + 1); // registros de la pagina    
-            $total = $this->model->pager->getTotal('gp1'); // total de registros
         }
+
+        $data = $this->model->paginate($len, 'gp1', ($start / $len) + 1); // registros de la pagina    
+        $total = $this->model->pager->getTotal('gp1'); // total de registros
 
         return [
 			"sEcho" => $page,
@@ -119,7 +133,6 @@ class TableLibrary{
 
     /**
      * Realiza la búsqueda general de registros por todas las columnas
-     * 
      *
      * @param string $match
      * @return void
