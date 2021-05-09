@@ -42,6 +42,7 @@
 <script src="/plugins/jquery.dataTables.js"></script>
 <script src="/plugins/dataTables.buttons.min.js"></script>
 <script src="/plugins/dataTables.bootstrap5.min.js"></script>
+<script src="/plugins/excel/xlsx.full.min.js"></script>
 
 <script>
 $(document).ready(function() {
@@ -192,47 +193,46 @@ $(document).ready(function() {
     }
 
     function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
-        var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
-        var CSV = '';
-        CSV += ReportTitle + '\r\n\n';
 
+        var xlsRows  = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+        var createXLSLFormatObj = [];
+        var xlsHeader  = [];
         if (ShowLabel) {
-            var row = "";
-
-            for (var index in arrData[0]) {
-                row += index + ',';
+            for (var index in xlsRows[0]) {
+                xlsHeader.push(index);
             }
-            row = row.slice(0, -1);
-            CSV += row + '\r\n';
         }
+        createXLSLFormatObj.push(xlsHeader);
+        $.each(xlsRows, function(index, value) {
+            var innerRowData = [];
+            $.each(value, function(ind, val) {
+                if(val == null){
+                    innerRowData.push("null");
+                }else{
+                    innerRowData.push(val);
+                }
+            });
+            createXLSLFormatObj.push(innerRowData);
+        });
 
-        for (var i = 0; i < arrData.length; i++) {
-            var row = "";
+          /* File Name */
+        var filename = `${ReportTitle.trim()}.xlsx`;
 
-            for (var index in arrData[i]) {
-                row += '"' + arrData[i][index] + '",';
-            }
+        /* Sheet Name */
+        var ws_name = "Reporte";
 
-            row.slice(0, row.length - 1);
-            CSV += row + '\r\n';
-        }
+        if (typeof console !== 'undefined') console.log(new Date());
+        var wb = XLSX.utils.book_new(),
+            ws = XLSX.utils.aoa_to_sheet(createXLSLFormatObj);
 
-        if (CSV == '') {
-            alert("Invalid data");
-            return;
-        }
-        var fileName = "MyReport_";
-        fileName += ReportTitle.replace(/ /g, "_");
+        /* Add worksheet to workbook */
+        XLSX.utils.book_append_sheet(wb, ws, ws_name);
 
-        var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
-        var link = document.createElement("a");
-        link.href = uri;
-        link.style = "visibility:hidden";
-        link.download = fileName + ".csv";
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        /* Write workbook and Download */
+        if (typeof console !== 'undefined') console.log(new Date());
+        XLSX.writeFile(wb, filename);
+        if (typeof console !== 'undefined') console.log(new Date());
     }
 
 });
