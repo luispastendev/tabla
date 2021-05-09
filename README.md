@@ -38,7 +38,7 @@ php spark migrate
 4. Lanzar los seeders
 
 ```bash
-php spark db:seed 
+php spark db:seed Tabla
 ```
 
 5. Iniciar el proyecto
