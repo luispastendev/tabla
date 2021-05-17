@@ -7,8 +7,8 @@ use CodeIgniter\Config\BaseConfig;
 class TableConfig extends BaseConfig
 {
     public $fields  = [
-        'id',
-        'num_fila',
+        // 'id',
+        // 'num_fila',
         'campus',
         'modalidad',
         'carrera_responsable',

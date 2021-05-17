@@ -73,11 +73,13 @@ class TableLibrary{
         
         if(!$paginate){
             // Búsqueda normal para exportacion a excel
-            return $this->model->findAll();
+            return $this->model->select(implode(', ',$this->configs->fields))->findAll();
 
         }
 
-        $data = $this->model->paginate($len, 'gp1', ($start / $len) + 1); // registros de la pagina    
+        $data = $this->model
+            ->select(implode(', ',$this->configs->fields))
+            ->paginate($len, 'gp1', ($start / $len) + 1); // registros de la pagina    
         // $total = $this->model->pager->getTotal('gp1'); // total de registros since 4.1.1
         $total = $this->model->countAllResults(); // support 4.0.4
 
