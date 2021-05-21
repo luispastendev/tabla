@@ -81,7 +81,7 @@ class TableLibrary{
             ->select(implode(', ',$this->configs->fields))
             ->paginate($len, 'gp1', ($start / $len) + 1); // registros de la pagina    
         // $total = $this->model->pager->getTotal('gp1'); // total de registros since 4.1.1
-        $total = $this->model->countAllResults(); // support 4.0.4
+        $total = $this->model->pager->getDetails('gp1')['total']; // support 4.0.4
 
         return [
 			"sEcho" => $page,
